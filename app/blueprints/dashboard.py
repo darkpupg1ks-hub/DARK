@@ -457,19 +457,34 @@ def api_check_key():
 # âœ… ØµÙØ­Ø© About
 # Admin About page removed per user request
 
-# âœ… ØµÙØ­Ø© Tools
+# ✅ صفحة Tools
 @bp.route("/tools")
 def tools():
     if not session.get("is_admin"):
         return redirect(url_for("dashboard.admin_login"))
+
     sb = get_supabase()
     tools = []
+
     try:
         # Include optional image fields so cards show thumbnails/backgrounds
-        res = sb.table('downloads').select('id,title,link,version,notes,visible,bg_image,thumb_image').order('id').execute()
+        res = sb.table('downloads') \
+            .select('id,title,link,version,notes,visible,bg_image,thumb_image') \
+            .order('id') \
+            .execute()
+
+        # احصل على البيانات بشكل آمن
         tools = getattr(res, 'data', None) or res
+
+        # تأكد إن الناتج قائمة من القواميس فقط
         if isinstance(tools, dict) and 'data' in tools:
             tools = tools['data']
+        elif isinstance(tools, tuple):
+            # حول tuple لقائمة من dicts (بشكل آمن)
+            tools = [dict(id=i, value=v) if isinstance(v, (list, tuple)) else {"value": v} for i, v in enumerate(tools)]
+        elif not isinstance(tools, list):
+            tools = []
+
     except Exception:
         # fallback to local JSON file
         try:
