@@ -1,0 +1,61 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<div class="admin-shell" style="max-width:1200px;margin:24px auto;padding:0;position:relative">
+  <aside class="admin-sidebar">
+    <div class="admin-welcome-mini">Welcome, Admin</div>
+    
+<nav class="admin-nav">
+  <a href="{{ url_for('dashboard.welcome') }}" class="admin-btn">
+    <div class="icon">👋</div>
+    <div class="label">Welcome</div>
+    <div class="hint">Show rules & welcome text</div>
+  </a>
+  <a href="{{ url_for('dashboard.keys') }}" class="admin-btn">
+    <div class="icon">🔑</div>
+    <div class="label">Keys</div>
+    <div class="hint">Create admin login keys</div>
+  </a>
+  <a href="{{ url_for('dashboard.downloads') }}" class="admin-btn">
+    <div class="icon">🧰</div>
+    <div class="label">Tools</div>
+    <div class="hint">Add tool links, media & info</div>
+  </a>
+  <a href="{{ url_for('dashboard.products') }}" class="admin-btn">
+    <div class="icon">🛍️</div>
+    <div class="label">Shop</div>
+    <div class="hint">Add products, price, media</div>
+  </a>
+  <a href="{{ url_for('dashboard.logout') }}" class="admin-btn logout">
+    <div class="icon">🚪</div>
+    <div class="label">Logout</div>
+    <div class="hint">Return to site</div>
+  </a>
+</nav>
+  </aside>
+
+  <section class="admin-main">
+    <div class="card admin-card">
+      <h2 class="title">Welcome</h2>
+      <div class="welcome-text">
+        <h3>Welcome, Administrator</h3>
+        <p>
+          This area is reserved for site administrators only. You are responsible
+          for managing content, products, downloads and license keys. The following rules apply:
+        </p>
+        <ul>
+          <li>No posting of prohibited materials in the admin area.</li>
+          <li>Do not share admin credentials or publish admin pages publicly.</li>
+          <li>Do not create Discord shares or leave content on public platforms from here.</li>
+          <li>Treat user data with care and follow privacy rules.</li>
+        </ul>
+        <p>
+          Please keep the admin pages tidy. Use the sidebar to navigate to the
+          section you want to manage. Make sure to verify entries before publishing.
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+

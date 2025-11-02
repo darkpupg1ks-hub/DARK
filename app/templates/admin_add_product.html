@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card glass" style="max-width:700px;margin:20px auto;padding:20px">
+  <h2 class="title">Add Product</h2>
+  <form method="post" class="form">
+    <input name="name" placeholder="Name" required />
+    <input name="price" placeholder="Price" required />
+    <input name="thumb" placeholder="Thumb URL" />
+    <input name="short_desc" placeholder="Short description" />
+    <textarea name="long_desc" placeholder="Long description"></textarea>
+    <textarea name="gallery" placeholder="Gallery (one image/video URL per line)"></textarea>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn gold" type="submit">Create</button>
+      <a class="btn" href="{{ url_for('dashboard.products') }}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

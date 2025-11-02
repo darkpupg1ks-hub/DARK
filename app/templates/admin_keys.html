@@ -1,0 +1,250 @@
+{% extends "admin_layout.html" %}
+{% block content %}
+<div class="admin-keys">
+  <header class="keys-header glass">
+    <div>
+      <h2 class="neon-text">🔑 Manage License Keys</h2>
+      <p class="muted">View, edit, delete, or generate license keys with ease.</p>
+    </div>
+    <div class="actions">
+      <button id="createRandom" class="btn-glow">+ Create Random</button>
+      <button id="refreshKeys" class="btn-outline">⟳ Refresh</button>
+    </div>
+  </header>
+
+  <section class="card neon-card">
+    <table class="keys-table" id="keysTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Key</th>
+          <th>Product</th>
+          <th>Expires</th>
+          <th>Used</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="footer-link">
+      <a href="{{ url_for('dashboard.welcome') }}" class="link">← Back to Dashboard</a>
+    </div>
+  </section>
+</div>
+
+<style>
+:root {
+  --dark-bg: #080b11;
+  --neon-blue: #00eaff;
+  --neon-purple: #b400ff;
+  --neon-gold: #f6c02a;
+  --text-muted: #9aa0a6;
+  --glass-bg: rgba(255, 255, 255, 0.04);
+}
+
+/* Page layout */
+.admin-keys {
+  max-width: 1100px;
+  margin: 40px auto;
+  color: #fff;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Header section */
+.keys-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 22px;
+  margin-bottom: 25px;
+  border-radius: 16px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.neon-text {
+  color: var(--neon-gold);
+  font-size: 26px;
+  font-weight: 700;
+  text-shadow: 0 0 10px var(--neon-gold), 0 0 25px var(--neon-purple);
+}
+.muted {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Buttons */
+.btn-glow {
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 0 18px var(--neon-blue);
+  transition: all 0.3s ease;
+}
+.btn-glow:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px var(--neon-purple);
+}
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--neon-blue);
+  color: var(--neon-blue);
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-outline:hover {
+  background: var(--neon-blue);
+  color: #111;
+  box-shadow: 0 0 15px var(--neon-blue);
+}
+
+/* Table styling */
+.neon-card {
+  background: rgba(15, 15, 25, 0.85);
+  border-radius: 18px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  animation: fadeIn 0.5s ease;
+}
+.keys-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+.keys-table th {
+  color: var(--neon-gold);
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 15px;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+.keys-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 14px;
+}
+.keys-table tr:hover {
+  background: rgba(255, 255, 255, 0.04);
+  transition: 0.2s;
+}
+.keys-table td button {
+  background: var(--neon-blue);
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-right: 6px;
+  box-shadow: 0 0 8px var(--neon-blue);
+  transition: 0.3s ease;
+}
+.keys-table td button:hover {
+  background: var(--neon-purple);
+  box-shadow: 0 0 15px var(--neon-purple);
+}
+
+/* Footer link */
+.footer-link {
+  text-align: center;
+  margin-top: 20px;
+}
+.footer-link .link {
+  color: var(--neon-purple);
+  text-decoration: none;
+}
+.footer-link .link:hover {
+  text-shadow: 0 0 12px var(--neon-purple);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<script>
+async function api(path, method="GET", body){
+  const res = await fetch(path, { method, credentials:'same-origin', headers:{'Content-Type':'application/json'}, body: body?JSON.stringify(body):undefined });
+  const text = await res.text();
+  try { return JSON.parse(text); } catch(e){ return { ok:false, error:'non_json_response', status:res.status, text }; }
+}
+
+async function loadKeys(){
+  const data = await api("/dashboard/api/keys");
+  const tbody = document.querySelector('#keysTable tbody');
+  tbody.innerHTML = '';
+  const rows = Array.isArray(data) ? data : (data && Array.isArray(data.rows) ? data.rows : []);
+  rows.forEach(k=>{
+    const keyVal = k.key_value || k.key || '';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${k.id}</td>
+      <td>${k.username || ''}</td>
+      <td style="font-family:monospace;color:#00eaff">${keyVal}</td>
+      <td>${k.product || ''}</td>
+      <td>${k.expires_at ? new Date(k.expires_at).toLocaleString() : (k.duration && k.duration !== 'lifetime' ? 'Not started' : '<span style="color:#f6c02a">Lifetime</span>')}</td>
+      <td>${(k.used || k.is_used) ? '<span style="color:#f66">Yes</span>' : '<span style="color:#6f6">No</span>'}</td>
+      <td>
+        <button onclick="editKey(${k.id})">Edit</button>
+        <button onclick="deleteKey(${k.id})" style="background:#ff0033;box-shadow:0 0 10px #ff0033">Delete</button>
+        <button onclick="copyKey('${keyVal}')" style="background:#f6c02a;color:#111;box-shadow:0 0 8px #f6c02a">Copy</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function copyKey(v){ navigator.clipboard.writeText(v); showToast("Copied key!"); }
+async function deleteKey(id){
+  if(!confirm('Delete this key?')) return;
+  await api('/dashboard/api/keys/'+id, 'DELETE');
+  showToast("Key deleted!");
+  loadKeys();
+}
+function editKey(id){
+  const newUser = prompt('New username (leave empty to skip):');
+  const newProd = prompt('New product (leave empty to skip):');
+  api('/dashboard/api/keys/'+id, 'PUT', {username:newUser||undefined, product:newProd||undefined}).then(()=>{
+    showToast("Key updated!");
+    loadKeys();
+  });
+}
+document.getElementById('createRandom').onclick = async ()=>{
+  const resp = await api('/dashboard/api/keys', 'POST', {});
+  const val = resp.key_value || (resp.row && (Array.isArray(resp.row)?resp.row[0]:resp.row).key_value) || '[no-key]';
+  showToast('Key created: ' + val);
+  loadKeys();
+};
+document.getElementById('refreshKeys').onclick = loadKeys;
+loadKeys(); setInterval(loadKeys, 30000);
+
+/* Small floating toast message */
+function showToast(text){
+  let box = document.getElementById('mini-toast');
+  if(!box){
+    box = document.createElement('div');
+    box.id = 'mini-toast';
+    box.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.75);color:#fff;padding:10px 20px;border-radius:10px;box-shadow:0 0 20px var(--neon-blue);z-index:9999;font-size:14px;transition:opacity .4s';
+    document.body.appendChild(box);
+  }
+  box.textContent = text;
+  box.style.opacity = '1';
+  setTimeout(()=>{ box.style.opacity='0'; }, 1200);
+}
+</script>
+{% endblock %}

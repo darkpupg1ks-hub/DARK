@@ -1,0 +1,173 @@
+{% extends "admin_layout.html" %}
+{% block content %}
+<div dir="rtl" style="max-width:1100px;margin:24px auto;padding:24px">
+  <style>
+    :root{--bg:#0f1115; --panel:#141619; --accent:#f6c02a; --muted:#9aa0a6; --card:#101216; --glass: rgba(255,255,255,0.02);}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+    h1{color:var(--accent);font-size:26px;margin:0 0 8px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:12px;box-shadow:0 6px 18px rgba(2,3,6,0.6);border:1px solid rgba(255,255,255,0.02)}
+    .table{width:100%;border-collapse:collapse;margin-top:12px}
+    .table th, .table td{padding:12px 14px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .actions button{margin-left:8px;padding:6px 10px;border-radius:6px;border:none;cursor:pointer}
+    .btn-primary{background:var(--accent);color:#111;font-weight:700;padding:8px 12px;border-radius:8px;border:0}
+    .input, select{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    .row{display:flex;gap:10px;align-items:center;margin:10px 0}
+    .muted{color:var(--muted);font-size:14px}
+    #formWrap{display:none;margin-bottom:12px}
+  </style>
+
+  <div class="card">
+    <div class="topbar">
+      <h1>🔐 مفاتيح الدخول</h1>
+      <div>
+        <button id="newBtn" class="btn-primary">إنشاء مفتاح جديد</button>
+      </div>
+    </div>
+
+    <div id="formWrap">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input id="username" class="input" placeholder="اسم المستخدم (Admin username)">
+        <input id="product" class="input" placeholder="المنتج (مثال: DARK-VIP)">
+        <select id="duration" class="input">
+          <option value="lifetime">دائم (Lifetime)</option>
+          <option value="1-minute">1 دقيقة</option>
+          <option value="5-minute">5 دقائق</option>
+          <option value="1-day">1 يوم</option>
+          <option value="7-day">1 أسبوع</option>
+          <option value="30-day">1 شهر</option>
+        </select>
+        <button id="createKey" class="btn-primary">إنشاء</button>
+        <button id="cancelCreate" style="padding:10px;border-radius:8px;">إلغاء</button>
+      </div>
+      <div class="muted">المفتاح سينشأ تلقائيًا ويعرض لك قيمة المفتاح (نسخها وشاركها بأمان).</div>
+    </div>
+
+    <table class="table" id="keysTable">
+      <thead>
+        <tr>
+          <th>ID</th><th>Username</th><th>Key</th><th>Product</th><th>Expires</th><th>Used</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div style="margin-top:12px">
+      <a href="{{ url_for('dashboard.welcome') }}">Back to Admin</a>
+    </div>
+  </div>
+
+  <script>
+    async function api(path, method="GET", body){
+      const res = await fetch(path, {
+        method,
+        credentials: 'same-origin', // ensure session cookie is sent
+        headers: {'Content-Type':'application/json'},
+        body: body?JSON.stringify(body):undefined
+      });
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        console.error("Non-JSON response from", path, res.status, text);
+        return { ok: false, error: 'non_json_response', status: res.status, text };
+      }
+    }
+
+    // show table
+    async function loadKeys(){
+      const data = await api("/dashboard/api/keys");
+      const tbody = document.querySelector("#keysTable tbody");
+      tbody.innerHTML = "";
+      console.log("/dashboard/api/keys ->", data);
+      const rows = Array.isArray(data) ? data : (data && Array.isArray(data.rows) ? data.rows : []);
+      if(rows.length === 0){
+        if(data && data.error){
+          alert("Load error: " + data.error);
+        }
+      }
+      rows.forEach(k=>{
+        const keyVal = k.key_value || k.key || '';
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${k.id}</td>
+          <td>${k.username || ""}</td>
+          <td style="font-family:monospace">${keyVal}</td>
+          <td>${k.product || ""}</td>
+          <td>${k.expires_at ? new Date(k.expires_at).toLocaleString() : (k.duration && k.duration !== 'lifetime' ? 'Not started' : 'Lifetime')}</td>
+          <td>${(k.used || k.is_used) ? "Yes" : "No"}</td>
+          <td class="actions">
+            <button onclick="editKey(${k.id})">Edit</button>
+            <button onclick="deleteKey(${k.id})">Delete</button>
+            <button onclick="copyKey('${keyVal}')">Copy</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function copyKey(v){
+      navigator.clipboard.writeText(v);
+      alert("Copied key to clipboard");
+    }
+
+    async function deleteKey(id){
+      if(!confirm("Delete this key?")) return;
+      await api("/dashboard/api/keys/"+id, "DELETE");
+      await loadKeys();
+    }
+
+    function editKey(id){
+      const newUser = prompt("New username (leave empty to skip):");
+      const newProd = prompt("New product (leave empty to skip):");
+      // simple edit example (no duration here)
+      api("/dashboard/api/keys/"+id, "PUT", {username: newUser||undefined, product: newProd||undefined}).then(loadKeys);
+    }
+
+    // create form toggle
+    document.getElementById("newBtn").onclick = ()=> document.getElementById("formWrap").style.display = "block";
+    document.getElementById("cancelCreate").onclick = ()=> document.getElementById("formWrap").style.display = "none";
+
+    document.getElementById("createKey").onclick = async ()=>{
+      const username = document.getElementById("username").value;
+      const product = document.getElementById("product").value;
+      const dur = document.getElementById("duration").value;
+      // parse dur into server-friendly object
+      let duration;
+      if(dur === "lifetime") duration = {unit:"lifetime"};
+      else {
+        const parts = dur.split("-");
+        duration = {unit: parts[1] === "minute" ? "minute" : (parts[1] === "day" ? "day" : (parts[1] === "month"? "month":"day")), value: parseInt(parts[0])};
+      }
+      const resp = await api("/dashboard/api/keys", "POST", {username, product, duration});
+      console.log("Create key response:", resp);
+      if(!resp || (resp.ok === false && !resp.row)){
+        const errMsg = (resp && resp.error) ? resp.error : 'Failed to create — server returned non-JSON or error.';
+        alert("Create error: " + errMsg);
+        return;
+      }
+      // Extract key value from response - try multiple sources
+      let val = '[no-key]';
+      if (resp.key_value) {
+        val = resp.key_value;
+      } else if (resp.row) {
+        const created = Array.isArray(resp.row) ? resp.row[0] : resp.row;
+        if (created) {
+          val = created.key_value || created.key || '[no-key]';
+        }
+      }
+      alert("Key created: " + val);
+      // Clear form fields
+      document.getElementById("username").value = "";
+      document.getElementById("product").value = "";
+      document.getElementById("duration").value = "lifetime";
+      document.getElementById("formWrap").style.display = "none";
+      loadKeys();
+    }
+
+    // load initially
+    loadKeys();
+    // refresh every 30s (optional)
+    setInterval(loadKeys, 30000);
+  </script>
+</div>
+{% endblock %}

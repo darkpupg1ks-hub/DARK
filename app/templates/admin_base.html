@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DARK Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+</head>
+<body class="dark-theme">
+
+<div class="sidebar">
+    <h3>Welcome, Admin</h3>
+    <ul>
+        <li><a href="{{ url_for('dashboard.welcome') }}">🏠 Welcome</a></li>
+        <li><a href="{{ url_for('dashboard.keys') }}">🔑 Keys</a></li>
+        <li><a href="{{ url_for('dashboard.tools') }}">🧰 Tools</a></li>
+        <li><a href="{{ url_for('dashboard.shop') }}">🛍️ Shop</a></li>
+        <li><a href="{{ url_for('dashboard.logout') }}">🚪 Logout</a></li>
+    </ul>
+</div>
+
+<div class="main-content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
+

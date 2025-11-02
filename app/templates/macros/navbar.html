@@ -1,0 +1,23 @@
+﻿<nav class="nav glass">
+  <div class="brand">DARK <span>Shop</span></div>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/tools">Tools</a></li>
+    <li><a href="/shop">Shop</a></li>
+    <li><a href="/contact">AI Chat</a></li>
+  </ul>
+  <div class="auth" style="display:flex;align-items:center;gap:10px">
+    <a class="cart-btn" href="/shop/cart" aria-label="Cart">
+      <!-- Minimal cart icon -->
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+        <path d="M7 4h-2l-1 2h2l3.6 7.59-1.35 2.44A2 2 0 0 0 10 19h8v-2h-7.42a.25.25 0 0 1-.22-.37L11.1 14h6.55a2 2 0 0 0 1.82-1.18L22 7H6.42l-.72-3zM7 20a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm10 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" fill="currentColor"/>
+      </svg>
+      {% set _cart_count = (session.get('cart') or [])|length %}
+      {% if _cart_count > 0 %}
+      <span class="cart-badge">{{ _cart_count }}</span>
+      {% endif %}
+    </a>
+    <a class="btn gold" href="/dashboard/admin">Admin</a>
+  </div>
+</nav>
+

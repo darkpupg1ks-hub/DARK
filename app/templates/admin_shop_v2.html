@@ -1,0 +1,67 @@
+{% extends "admin_layout.html" %}
+{% block content %}
+<div class="admin-shop" dir="rtl">
+  <div class="header glass" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <div>
+      <h2 class="title" style="margin:0">Shop (Admin)</h2>
+      <p class="muted" style="margin:6px 0 0">أدر منتجاتك مباشرة من هنا مع بطاقات أنيقة وحركات لطيفة.</p>
+    </div>
+    <div class="header-controls">
+      <button class="btn gold" id="toggleAdd">إضافة منتج جديد +</button>
+    </div>
+  </div>
+
+  <section class="layout">
+    <aside class="panel form glass" id="addForm" style="display:none">
+      <h3 style="margin-bottom:10px">أضف منتج جديد</h3>
+      <form method="post" action="{{ url_for('dashboard.add_product') }}">
+        <label class="field"><span>اسم المنتج</span><input name="name" required /></label>
+        <div class="two">
+          <label class="field"><span>السعر</span><input name="price" placeholder="مثال: 19.99" /></label>
+          <label class="field"><span>رابط صورة الخلفية</span><input name="thumb" placeholder="https://..." /></label>
+        </div>
+        <label class="field"><span>وصف قصير</span><input name="short_desc" /></label>
+        <label class="field"><span>وصف طويل</span><textarea name="long_desc"></textarea></label>
+        <label class="field"><span>صور المنتج (رابط في كل سطر)</span><textarea name="images" class="input" placeholder="https://example.com/img1.jpg\nhttps://example.com/img2.jpg"></textarea></label>
+        <label class="field"><span>فيديوهات المنتج (رابط في كل سطر)</span><textarea name="videos" class="input" placeholder="https://example.com/video.mp4\nhttps://youtu.be/xxxx"></textarea></label>
+        <div class="actions"><button class="btn primary" type="submit">حفظ المنتج</button></div>
+      </form>
+    </aside>
+
+    <main class="panel grid glass">
+      {% set prods = products or [] %}
+      {% if prods|length == 0 %}
+        <p class="muted">لا توجد منتجات بعد. ابدأ بإضافة منتج.</p>
+      {% endif %}
+      <div class="cards admin-products-grid">
+        {% for p in prods %}
+        <div class="product-admin-card">
+          <div class="cover" style="background-image:url('{{ p.thumb }}')"></div>
+          <div class="product-body">
+            <div class="meta">
+              <div class="title-price">
+                <div class="name">{{ p.name }}</div>
+                <div class="price">${{ '%.2f'|format(p.price or 0) }}</div>
+              </div>
+              <div class="actions">
+                <a class="btn ghost" href="{{ url_for('dashboard.edit_product', pid=p.id) }}">تعديل</a>
+                <form method="post" action="{{ url_for('dashboard.delete_product', pid=p.id) }}" onsubmit="return confirm('حذف المنتج؟')">
+                  <button class="btn ghost danger" type="submit">حذف</button>
+                </form>
+              </div>
+            </div>
+            <div class="desc">{{ p.short_desc }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </main>
+  </section>
+</div>
+<script>
+  const t = document.getElementById('toggleAdd');
+  const f = document.getElementById('addForm');
+  if (t && f) t.addEventListener('click', ()=>{ f.style.display = (f.style.display==='none'||!f.style.display) ? 'block':'none'; });
+</script>
+{% endblock %}
+

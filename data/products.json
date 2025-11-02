@@ -1,0 +1,20 @@
+[
+  {
+    "name": "wd",
+    "price": 10.9,
+    "thumb": "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNTk2cnJuYnNzOGx5ZzJiMzJ4c2l1c3M3MmV6dDF6OGJ4dWcxdnJzNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/A06UFEx8jxEwU/giphy.gif",
+    "short_desc": "صيشصdawdaw",
+    "long_desc": "dwadawdaw\r\ndawdaw\r\nWAdwada\r\ndwa",
+    "media": [
+      {
+        "type": "image",
+        "url": "https://cdn.discordapp.com/attachments/1263290415713484901/1417742680644911194/image.png?ex=69059943&is=690447c3&hm=3f4d5b7fe4f1d67e8720d4cf2bf37420a8c2f3c11d2c02e61c7a0516f407a1af&"
+      },
+      {
+        "type": "video",
+        "url": "https://cdn.discordapp.com/attachments/1263290415713484901/1418164473432244256/2025-09-16_21-27-48.mp4?ex=690527d6&is=6903d656&hm=b2a7dcc36b5b4d0fe0ccdd3629d207656e9485b945231694d23d10d524a33ce6&"
+      }
+    ],
+    "id": 1
+  }
+]

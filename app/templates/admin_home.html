@@ -1,0 +1,46 @@
+{% extends "admin_layout.html" %}
+{% block content %}
+<div style="max-width:900px;margin:20px auto;padding:20px">
+  <h2>🏡 Edit Home Page</h2>
+  <form method="post" action="{{ url_for('dashboard.save_home') }}">
+  <label>Title</label>
+  <input name="title" value="{{ content.get('title','') }}" placeholder="Main title" />
+
+  <label>Subtitle</label>
+  <input name="subtitle" value="{{ content.get('subtitle','') }}" placeholder="Subtitle" />
+
+  <label>Hero text</label>
+  <textarea name="hero" placeholder="Hero/Lead text">{{ content.get('hero','') }}</textarea>
+
+    <div style="display:flex;gap:10px">
+      <div style="flex:1">
+  <label>Button text</label>
+  <input name="button_text" value="{{ content.get('button_text','') }}" />
+      </div>
+      <div style="flex:1">
+  <label>Button URL</label>
+  <input name="button_url" value="{{ content.get('button_url','') }}" />
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <div style="flex:1">
+  <label>Text color</label>
+  <input name="text_color" placeholder="#ffffff" value="{{ content.get('text_color','') }}" />
+      </div>
+      <div style="flex:1">
+  <label>Background color</label>
+  <input name="bg_color" placeholder="#0f111a" value="{{ content.get('bg_color','') }}" />
+      </div>
+    </div>
+
+    <label style="margin-top:10px">Extra (JSON) — optional</label>
+  <textarea name="extra" placeholder='[{"title":"Feature 1","text":"..."}]'>{{ content.get('extra','') }}</textarea>
+
+    <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+      <button class="btn gold" type="submit">Save</button>
+      <a class="btn" href="{{ url_for('dashboard.welcome') }}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

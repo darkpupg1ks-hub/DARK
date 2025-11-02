@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card glass" style="max-width:1100px;margin:20px auto;padding:20px">
+  <h2 class="title">Manage Downloads</h2>
+  <a class="btn gold" href="{{ url_for('dashboard.add_download') }}">Add Download</a>
+  <div class="grid" style="margin-top:16px">
+    {% for d in downloads %}
+      <div class="card glass">
+        <h3>{{ d.title }}</h3>
+        <p>{{ d.notes }}</p>
+        <div>Version: {{ d.version }}</div>
+        <a class="btn" href="{{ d.link }}" target="_blank">Open</a>
+      </div>
+    {% else %}
+      <p>No downloads yet.</p>
+    {% endfor %}
+  </div>
+  <a class="btn" href="{{ url_for('dashboard.index') }}">Back to Admin</a>
+</div>
+{% endblock %}

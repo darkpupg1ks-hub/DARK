@@ -1,0 +1,321 @@
+{% extends "admin_layout.html" %}
+{% block content %}
+<div class="tools-wrapper">
+  <header class="tools-header glass">
+    <h2 class="neon-title">⚙️ Site Tools</h2>
+    <a class="btn-glow" href="{{ url_for('dashboard.add_tool') }}">+ Add New Tool</a>
+  </header>
+
+  <section class="tools-grid">
+    {% for t in tools %}
+      {% set bg = t.get('bg_image') %}
+      {% set thumb = t.get('thumb_image') %}
+      <div class="tool-card" {% if bg %}style="--bg:url('{{ bg }}')" {% endif %}>
+        <div class="corner-actions">
+          <a class="icon-btn edit" title="Edit" href="{{ url_for('dashboard.edit_tool', tool_id=t.get('id')) }}">✎</a>
+          <form method="post" action="{{ url_for('dashboard.delete_tool', tool_id=t.get('id')) }}" onsubmit="return confirm('Delete this tool?');">
+            <button class="icon-btn delete" type="submit" title="Delete">🗑</button>
+          </form>
+        </div>
+
+        <div class="thumb">
+          {% if thumb %}
+            <img src="{{ thumb }}" alt="thumb">
+          {% else %}
+            <div class="no-thumb">{{ (t.get('title') or '?')[0]|upper }}</div>
+          {% endif %}
+        </div>
+
+        <div class="info">
+          <h3>{{ t.get('title', 'Unnamed') }}</h3>
+          <p class="visibility">{{ t.get('visible') and 'Visible' or 'Hidden' }}</p>
+          <p class="desc">{{ t.get('notes','No description provided') }}</p>
+        </div>
+
+        <div class="meta">
+          <span class="version">v{{ t.get('version','latest') }}</span>
+          <div class="btns">
+            <a class="btn-download" href="{{ t.get('link','') }}" target="_blank">Download</a>
+            <button class="btn-copy" onclick="copyLink('{{ t.get('link','') }}')">Copy</button>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="no-tools">No tools yet — click “Add New Tool” to create one.</div>
+    {% endfor %}
+  </section>
+</div>
+
+<style>
+:root {
+  --neon-blue: #00eaff;
+  --neon-purple: #b400ff;
+  --neon-gold: #f6c02a;
+  --dark-bg: #0a0d13;
+  --card-bg: rgba(20, 20, 28, 0.7);
+  --glass-bg: rgba(255,255,255,0.04);
+  --text-muted: #9aa0a6;
+}
+
+/* General layout */
+.tools-wrapper {
+  max-width: 1300px;
+  margin: 40px auto;
+  padding: 24px;
+  color: #fff;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Header */
+.tools-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 25px;
+  border-radius: 18px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  margin-bottom: 30px;
+}
+.neon-title {
+  font-size: 28px;
+  color: var(--neon-gold);
+  font-weight: 700;
+  text-shadow: 0 0 10px var(--neon-gold), 0 0 25px var(--neon-purple);
+}
+.btn-glow {
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+  color: #fff;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 0 0 15px var(--neon-blue);
+  transition: all 0.3s ease;
+}
+.btn-glow:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 30px var(--neon-purple);
+}
+
+/* Tools grid */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+/* Tool Card */
+.tool-card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  padding: 15px;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.4s ease;
+}
+.tool-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px var(--neon-blue);
+  border-color: var(--neon-blue);
+}
+
+/* Background overlay */
+.tool-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg, none);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.15;
+  z-index: 0;
+}
+
+/* Corner buttons */
+.corner-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: 0.3s;
+  z-index: 3;
+}
+.tool-card:hover .corner-actions {
+  opacity: 1;
+}
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #1b1f2a;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+.icon-btn.edit:hover {
+  background: var(--neon-blue);
+  box-shadow: 0 0 10px var(--neon-blue);
+}
+.icon-btn.delete:hover {
+  background: #ff0033;
+  box-shadow: 0 0 10px #ff0033;
+}
+
+/* Thumbnail */
+.thumb {
+  width: 100%;
+  height: 150px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+.tool-card:hover .thumb img {
+  transform: scale(1.05);
+}
+.no-thumb {
+  background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: 800;
+}
+
+/* Info */
+.info {
+  margin-top: 12px;
+  z-index: 2;
+  position: relative;
+}
+.info h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #fff;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+.info .visibility {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 2px 0 6px;
+}
+.info .desc {
+  font-size: 14px;
+  opacity: 0.9;
+  line-height: 1.4;
+  color: #ddd;
+  min-height: 35px;
+}
+
+/* Meta section */
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  z-index: 2;
+  position: relative;
+}
+.version {
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 13px;
+  color: var(--neon-gold);
+  font-weight: 700;
+}
+.btns {
+  display: flex;
+  gap: 8px;
+}
+.btn-download {
+  background: var(--neon-gold);
+  color: #111;
+  font-weight: 800;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 12px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.3s;
+  box-shadow: 0 0 15px var(--neon-gold);
+}
+.btn-download:hover {
+  background: #ffdb4d;
+  box-shadow: 0 0 25px var(--neon-gold);
+}
+.btn-copy {
+  background: var(--neon-blue);
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 15px var(--neon-blue);
+}
+.btn-copy:hover {
+  background: var(--neon-purple);
+  box-shadow: 0 0 25px var(--neon-purple);
+}
+
+/* No tools */
+.no-tools {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<script>
+function copyLink(link){
+  navigator.clipboard.writeText(link);
+  showToast("Copied link!");
+}
+function showToast(text){
+  let box=document.getElementById('toast-box');
+  if(!box){
+    box=document.createElement('div');
+    box.id='toast-box';
+    box.style.cssText='position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);padding:10px 20px;color:#fff;border-radius:10px;box-shadow:0 0 20px var(--neon-blue);font-size:14px;transition:opacity .4s;z-index:9999';
+    document.body.appendChild(box);
+  }
+  box.textContent=text;
+  box.style.opacity='1';
+  setTimeout(()=>box.style.opacity='0',1200);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\ghdar\Desktop\New folder (2)\dark_shop\run.py", line 1, in <module>
+    from app import create_app
+  File "C:\Users\ghdar\Desktop\New folder (2)\dark_shop\app\__init__.py", line 2, in <module>
+    from .config import load_config
+  File "C:\Users\ghdar\Desktop\New folder (2)\dark_shop\app\config.py", line 2, in <module>
+    from dotenv import load_dotenv
+ModuleNotFoundError: No module named 'dotenv'

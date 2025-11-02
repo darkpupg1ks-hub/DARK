@@ -1,0 +1,205 @@
+﻿:root {
+  --bg: #0b0d12;            /* deep dark */
+  --fg: #e6e6e6;            /* light text */
+  --gold: #d4af37;          /* luxury gold */
+  --glass: rgba(255,255,255,0.08);
+  --glass-border: rgba(255,255,255,0.25);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Ubuntu;color:var(--fg);background:radial-gradient(1200px 800px at 20% 20%, #101523, #0b0d12 60%)}
+.container{max-width:1100px;margin:40px auto;padding:0 16px}
+
+/* Stars background */
+.bg-stars{position:fixed;inset:0;background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.05), transparent 35%), radial-gradient(circle at 80% 30%, rgba(255,255,255,0.04), transparent 40%);filter: blur(0.5px);pointer-events:none}
+
+.nav{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;margin:16px auto;max-width:1100px;border-radius:16px}
+/* Make navbar glassy/transparent and blended */
+.nav.glass{backdrop-filter:saturate(180%) blur(10px);background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03));border:1px solid rgba(255,255,255,0.18);box-shadow:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.25)}
+.nav .brand{font-weight:800;letter-spacing:.5px}
+.nav .brand span{color:var(--gold)}
+.nav ul{list-style:none;display:flex;gap:20px;padding:0;margin:0}
+/* Animate navbar links like buttons */
+.nav a{position:relative;display:inline-block;padding:8px 12px;border-radius:12px;color:var(--fg);text-decoration:none;opacity:.9;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.06);transition:transform .15s ease, box-shadow .15s ease, color .15s ease, background .15s ease;overflow:hidden}
+.nav a::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,transparent 45%,rgba(255,255,255,.25) 50%,transparent 55%);transform:translateX(-120%);transition:transform .6s ease}
+.nav a:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.45);color:var(--gold)}
+.nav a:hover::after{transform:translateX(120%)}
+.nav .btn{margin-left:10px}
+
+/* Luxe cart icon on the right */
+.cart-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;padding:0;border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03));color:#ffd66a;box-shadow:0 6px 18px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,0.15);transition:transform .15s ease, box-shadow .15s ease, background .15s ease;overflow:visible}
+.cart-btn:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.5), 0 0 28px rgba(212,175,55,.15)}
+.cart-btn svg{filter:drop-shadow(0 2px 4px rgba(0,0,0,.35))}
+.cart-badge{position:absolute;bottom:-6px;left:-6px;background:linear-gradient(180deg,#f1f1f1,#bebebe);color:#111;font-weight:800;font-size:12px;line-height:1;padding:3px 6px;border-radius:10px;border:1px solid rgba(0,0,0,0.15);box-shadow:0 6px 16px rgba(0,0,0,.45)}
+
+.glass{backdrop-filter:saturate(170%) blur(10px);background:var(--glass);border:1px solid var(--glass-border);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.btn{display:inline-block;padding:10px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03));color:var(--fg);cursor:pointer;position:relative;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.35);transition:transform .15s ease, box-shadow .15s ease, filter .15s ease}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,0,0,.45);filter:saturate(1.05)}
+.btn:active{transform:translateY(0);box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.btn::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg, transparent 45%, rgba(255,255,255,.25) 50%, transparent 55%);transform:translateX(-120%);transition:transform .6s ease}
+.btn:hover::after{transform:translateX(120%)}
+.btn.gold{background:linear-gradient(180deg,#5b4100,#c9a431 40%,#d7b545 60%,#5b4100);color:#120f06;font-weight:800;border-color:rgba(255,215,80,0.35);box-shadow:0 8px 24px rgba(212,175,55,.35), inset 0 1px 0 rgba(255,255,255,0.25)}
+.btn.gold:hover{box-shadow:0 18px 50px rgba(212,175,55,.45), inset 0 1px 0 rgba(255,255,255,0.3)}
+.btn.outline{background:transparent;border:1px solid rgba(255,255,255,0.22)}
+
+.hero{padding:60px;text-align:center}
+.hero h1{font-size:48px;margin:0 0 10px}
+.hero h1 span{color:var(--gold)}
+.hero .cta{margin-top:16px;display:flex;justify-content:center;gap:12px}
+
+.title{font-size:32px;margin:10px 0 20px;color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.card{padding:16px}
+
+/* Product cards */
+.products-grid{align-items:stretch}
+.product-card{display:flex;flex-direction:column;padding:0;overflow:hidden;border-radius:16px;position:relative;background:linear-gradient(180deg,rgba(20,22,30,.85),rgba(12,14,20,.95));border:1px solid rgba(255,255,255,.06)}
+.product-card::before{content:"";position:absolute;inset:-1px;border-radius:18px;background:radial-gradient(600px 160px at -20% -20%, rgba(212,175,55,0.18), transparent 40%), radial-gradient(600px 200px at 120% 120%, rgba(86,130,255,0.15), transparent 40%);filter:blur(22px);opacity:.45;pointer-events:none}
+.product-card .media{position:relative;display:block;height:190px;overflow:hidden}
+.product-card .media .bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.7);transform:scale(1.05);transition:transform .35s ease}
+.product-card:hover .media .bg{transform:scale(1.12)}
+.product-card .media .overlay{position:absolute;left:12px;bottom:12px}
+.product-card .media .overlay .name{font-weight:800}
+.product-card .media .overlay .price{color:var(--gold);font-weight:800}
+.product-card .details{padding:12px}
+.product-card .details .desc{opacity:.9;margin-bottom:10px}
+.product-card .actions{display:flex;gap:8px;flex-wrap:wrap}
+/* admin-mini overlay buttons removed (reverted) */
+
+.form{padding:16px;display:grid;gap:12px}
+.form input,.form textarea{padding:12px;border-radius:12px;border:1px solid var(--glass-border);background:rgba(0,0,0,.25);color:var(--fg)}
+
+.product-view{display:grid;grid-template-columns:1fr 420px;gap:24px;padding:16px}
+.media-panel{padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:rgba(0,0,0,.25);display:flex;flex-direction:column;gap:10px}
+.media-viewer{height:340px;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));cursor:zoom-in}
+.media-viewer img,.media-viewer video,.media-viewer iframe{width:100%;height:100%;object-fit:cover;display:block;border-radius:12px}
+.media-viewer video,.media-viewer iframe{background:#000}
+.media-thumbs{display:flex;gap:10px;overflow-x:auto;padding:4px 2px}
+.media-thumbs .thumb{width:90px;height:80px;border-radius:12px;background-size:cover;background-position:center;cursor:pointer;border:1px solid rgba(255,255,255,.08)}
+.media-thumbs .thumb.video{display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5)}
+.media-thumbs .thumb.video span{font-size:26px;color:#fff}
+@media (max-width: 900px){
+  .product-view{grid-template-columns:1fr}
+}
+.product-hero{height:240px;border-radius:16px;background-size:cover;background-position:center;margin-bottom:10px}
+.gallery-controls{display:none}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px}
+.gallery .thumb{height:80px;border-radius:12px;background-size:cover;background-position:center;cursor:pointer;border:1px solid rgba(255,255,255,.1)}
+.gallery .thumb.video{display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5)}
+.gallery .thumb.video span{font-size:26px;color:#fff}
+
+.lightbox{position:fixed;inset:0;display:grid;place-items:center;z-index:1000}
+.lightbox[hidden]{display:none}
+.lightbox .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(2px)}
+.lightbox .lightbox-inner{position:relative;z-index:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px}
+.lightbox img,.lightbox video{max-width:80vw;max-height:70vh;border-radius:8px}
+
+.stats{grid-template-columns:repeat(3,1fr)}
+.stat{font-size:34px;font-weight:800;color:var(--gold)}
+
+.toasts{display:grid;gap:8px;margin:10px 0}
+.toast{padding:10px}
+.toast.success{border-left:4px solid #2ecc71}
+.toast.error{border-left:4px solid #e74c3c}
+
+#ai-box{display:grid;gap:12px}
+.ai-log{height:220px;overflow:auto;border:1px solid var(--glass-border);border-radius:12px;padding:12px;background:rgba(0,0,0,.3)}
+.ai-log .you{margin:6px 0;padding:8px 10px;background:rgba(255,255,255,.08);border-radius:10px}
+.ai-log .ai{margin:6px 0;padding:8px 10px;background:rgba(212,175,55,.15);border-radius:10px}
+
+/* Admin panel styles */
+.admin-shell{display:flex;align-items:flex-start;gap:24px}
+.admin-sidebar{position:fixed;right:24px;top:90px;width:220px;background:linear-gradient(180deg,#1b1e23,#111216);border-radius:20px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.04)}
+.admin-welcome-mini{font-weight:700;color:var(--gold);margin-bottom:12px;text-align:center}
+.admin-nav{display:flex;flex-direction:column;gap:12px}
+.admin-btn{display:block;padding:10px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));color:var(--fg);text-decoration:none;border:1px solid rgba(255,255,255,0.04);transition:transform .18s ease, box-shadow .18s ease}
+.admin-btn .icon{font-size:20px;text-align:center}
+.admin-btn .label{font-weight:700;margin-top:6px;text-align:center}
+.admin-btn .hint{font-size:12px;opacity:0.8;text-align:center;margin-top:4px;color:rgba(230,230,230,0.8)}
+.admin-btn:hover{transform:translateX(-6px);box-shadow:0 8px 24px rgba(0,0,0,0.45)}
+.admin-btn.logout{background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.06)}
+
+.admin-main{margin-right:260px;padding:12px}
+.admin-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:14px;padding:20px;border:1px solid rgba(255,255,255,0.05)}
+.welcome-text{color:var(--fg);text-align:left}
+.welcome-text ul{margin-left:18px}
+
+@media (max-width:900px){
+  .admin-shell{flex-direction:column}
+  .admin-sidebar{position:static;width:100%;display:flex;flex-wrap:wrap;justify-content:center}
+  .admin-main{margin-right:0}
+}
+
+/* Cart table */
+/* Cart */
+.cart-wrap{display:grid;grid-template-columns:1fr 320px;gap:16px}
+@media(max-width:900px){.cart-wrap{grid-template-columns:1fr}}
+.cart-table{width:100%;border-collapse:collapse;margin-bottom:12px;background:rgba(0,0,0,.2);border-radius:12px;overflow:hidden}
+.cart-table th,.cart-table td{padding:12px;border-bottom:1px solid rgba(255,255,255,0.06);text-align:left}
+.cart-table td.prod{display:flex;align-items:center;gap:10px}
+.cart-table td.prod img{width:56px;height:56px;object-fit:cover;border-radius:10px}
+.qty-box{display:inline-flex;align-items:center;border:1px solid rgba(255,255,255,0.08);border-radius:10px;overflow:hidden}
+.qty-box button{width:32px;height:32px;background:rgba(0,0,0,.35);color:#fff;border:0;cursor:pointer}
+.qty-box input{width:44px;text-align:center;border:0;background:transparent;color:#fff}
+.cart-summary{padding:14px;border:1px solid rgba(255,255,255,0.06);border-radius:12px;background:rgba(0,0,0,.25)}
+.cart-total{margin:10px 0;font-weight:800;color:var(--gold)}
+
+/* ===== Minor UI fixes (readability/contrast) ===== */
+/* Make Admin button text always readable and soften sheen */
+.btn.gold{color:#111;text-shadow:0 1px 0 rgba(255,255,255,.25),0 1px 6px rgba(0,0,0,.35);box-shadow:0 6px 16px rgba(212,175,55,.25), inset 0 1px 0 rgba(255,255,255,0.18)}
+.btn.gold::after{background:linear-gradient(120deg, transparent 45%, rgba(255,255,255,.10) 50%, transparent 55%)}
+.btn.gold:hover{box-shadow:0 12px 28px rgba(212,175,55,.35), inset 0 1px 0 rgba(255,255,255,0.22)}
+
+/* Improve cart badge visibility */
+.cart-badge{bottom:-6px !important;left:-6px !important;min-width:24px;height:24px;display:grid;place-items:center;font-weight:900;font-size:14px;border-radius:999px;padding:0 6px;border:1px solid rgba(0,0,0,.25);box-shadow:0 6px 16px rgba(0,0,0,.5),0 0 0 2px rgba(0,0,0,.25);z-index:2}
+
+/* ===== Payment choices grid (shown on checkout) ===== */
+.payment-choices{margin-top:12px;padding:16px}
+.pay-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.pay-option{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:var(--fg);background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px;transition:transform .12s ease, box-shadow .15s ease, background .12s ease}
+.pay-option .icon{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:24px;background:linear-gradient(180deg,#232631,#1b1d25);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.pay-option .label{font-weight:700;opacity:.95}
+.pay-option:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(0,0,0,.5)}
+.pay-option.discord .icon{color:#8ea1e1}
+.pay-option.whatsapp .icon{color:#25d366}
+.pay-option.telegram .icon{color:#2aa7e5}
+.pay-option.bank .icon{color:#ffd66a}
+.pay-option.botim .icon{color:#ffd66a}
+
+/* ===== BOTIM QR modal ===== */
+.qr-modal{position:fixed;inset:0;z-index:1000;display:grid;place-items:center}
+.qr-modal .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(2px)}
+.qr-modal .panel{position:relative;z-index:1;background:linear-gradient(180deg,rgba(28,30,40,.96),rgba(18,20,28,.96));border:1px solid rgba(255,255,255,.06);border-radius:16px;box-shadow:0 14px 46px rgba(0,0,0,.6);padding:12px;max-width:420px;width:92%}
+.qr-modal img{display:block;width:100%;border-radius:12px}
+.qr-actions{display:flex;gap:8px;justify-content:center;margin-top:10px}
+.qr-note{margin:8px 0 0;opacity:.8;text-align:center}
+.qr-number{margin-top:10px;text-align:center;font-weight:800;letter-spacing:.5px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);padding:8px 10px;border-radius:10px}
+
+/* ===== Modern AI chat (Contact page) ===== */
+.ai-shell{max-width:1100px;margin:0 auto}
+.ai-card{padding:16px;border-radius:16px}
+.ai-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.ai-status{display:flex;align-items:center;gap:8px;opacity:.9}
+.ai-status .dot{width:10px;height:10px;border-radius:50%;background:#2ecc71;box-shadow:0 0 10px rgba(46,204,113,.6)}
+.ai-log{height:360px;overflow:auto;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px;background:rgba(0,0,0,.25)}
+.bubble{max-width:78%;padding:10px 12px;border-radius:14px;margin:8px 0;line-height:1.45;animation:fadeUp .18s ease both}
+.bubble.you{margin-left:auto;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.06)}
+.bubble.ai{background:linear-gradient(180deg,rgba(212,175,55,.14),rgba(212,175,55,.08));border:1px solid rgba(255,215,80,.18)}
+.ai-typing{display:flex;gap:6px;align-items:center;margin:8px 6px}
+.ai-typing span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.7);animation:blink .9s infinite}
+.ai-typing .b2{animation-delay:.15s}.ai-typing .b3{animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.ai-input{display:flex;gap:8px;align-items:center;margin-top:8px}
+.ai-input textarea{flex:1;min-height:48px;max-height:140px;resize:vertical;border-radius:12px;border:1px solid var(--glass-border);background:rgba(0,0,0,.25);color:var(--fg);padding:10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{padding:8px 12px;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.08);cursor:pointer}
+
+/* ===== Polished scrollbars (global + AI log) ===== */
+html{scrollbar-width:thin;scrollbar-color:#2b2f44 rgba(255,255,255,0.06)}
+*::-webkit-scrollbar{width:10px;height:10px}
+*::-webkit-scrollbar-track{background:rgba(255,255,255,0.06);border-radius:10px}
+*::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#2b2f44,#1f2235);border:1px solid rgba(255,255,255,0.08);border-radius:10px}
+*::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#3a3f58,#25293e)}
+
+.ai-log{scrollbar-color:#3a3f58 rgba(255,255,255,0.04)}
+\n
+

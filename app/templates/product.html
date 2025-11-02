@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if product %}
+<div class="product-view glass">
+  <!-- Left: product info -->
+  <div class="prod-info">
+    <h2>{{ product.name }}</h2>
+    <p>{{ product.long_desc }}</p>
+    <div class="price">${{ '%.2f'|format(product.price or 0) }}</div>
+    <form method="post" action="{{ url_for('shop.add_to_cart', pid=product.id) }}">
+      <button class="btn gold" type="submit">Add to Cart</button>
+    </form>
+  </div>
+  <!-- Right: media panel (big viewer + thumbs) -->
+  <div class="media-panel">
+    <div id="media-viewer" class="media-viewer">
+      <img id="viewer-img" src="{{ product.thumb }}" alt="{{ product.name }}" />
+      <video id="viewer-video" controls style="display:none"></video>
+      <iframe id="viewer-yt" style="display:none;border:0;width:100%;height:100%;border-radius:12px" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+    {% if media and media|length > 0 %}
+    <div class="media-thumbs">
+      {% for m in media %}
+        {% if m.type == 'video' %}
+          <div class="thumb video" data-video="{{ m.url }}"><span>▶</span></div>
+        {% else %}
+          <div class="thumb" data-image="{{ m.url }}" style="background-image:url('{{ m.url }}')"></div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+<div id="lightbox" class="lightbox" hidden>
+  <div class="lightbox-inner">
+    <button id="lightbox-close" class="btn">Close</button>
+    <img id="lightbox-img" src="" alt="" />
+    <video id="lightbox-video" controls style="display:none"></video>
+    <iframe id="lightbox-yt" style="display:none;border:0;width:80vw;height:70vh;border-radius:8px" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+  <div class="backdrop"></div>
+  </div>
+{% else %}
+<p>Product not found.</p>
+{% endif %}
+{% endblock %}
+

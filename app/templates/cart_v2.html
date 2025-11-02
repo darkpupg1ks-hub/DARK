@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="title">Shopping Cart</h2>
+{% set count = (cart or [])|length %}
+{% if count > 0 %}
+<div class="cart-wrap">
+  <form method="post" action="{{ url_for('shop.update_cart') }}" class="card glass" style="padding:12px">
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in cart %}
+        <tr>
+          <td class="prod">
+            {% if i.thumb %}<img src="{{ i.thumb }}" alt="" />{% endif %}
+            <span>{{ i.name }}</span>
+          </td>
+          <td>${{ '%.2f'|format(i.price or 0) }}</td>
+          <td>
+            <div class="qty-box">
+              <button type="button" class="qty-dec" data-id="{{ i.id }}">-</button>
+              <input type="number" min="1" name="qty_{{ i.id }}" value="{{ i.qty }}" />
+              <button type="button" class="qty-inc" data-id="{{ i.id }}">+</button>
+            </div>
+          </td>
+          <td>
+            {% set line = (i.price or 0) * (i.qty or 1) %}
+            ${{ '%.2f'|format(line) }}
+          </td>
+          <td>
+            <button class="btn" type="submit" name="remove_pid" value="{{ i.id }}">Remove</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div style="display:flex;gap:8px">
+      <button class="btn gold" type="submit">Update Cart</button>
+      <a class="btn" href="/shop">Continue Shopping</a>
+    </div>
+  </form>
+
+  <div class="cart-summary card glass">
+    <div class="cart-total">Total: <strong>${{ '%.2f'|format(total or 0) }}</strong></div>
+    <button class="btn gold" id="checkout-btn" type="button" style="width:100%">Checkout</button>
+  </div>
+
+  <div id="payment-choices" class="payment-choices card glass" hidden>
+    <h3 style="margin:0 0 10px;color:var(--gold)">Available Payment Methods</h3>
+    <div class="pay-grid">
+      <a class="pay-option discord" href="https://discord.gg/FtprtXweuZ" target="_blank" rel="noopener" title="Discord">
+        <span class="icon"><img src="https://cdn.simpleicons.org/discord/5865F2" alt="Discord" /></span>
+        <span class="label">Discord</span>
+      </a>
+      <a class="pay-option whatsapp" href="https://wa.me/971566252595" target="_blank" rel="noopener" title="WhatsApp / Call">
+        <span class="icon"><img src="https://cdn.simpleicons.org/whatsapp/25D366" alt="WhatsApp" /></span>
+        <span class="label">WhatsApp</span>
+      </a>
+      <a class="pay-option telegram" href="https://t.me/DARK_PB" target="_blank" rel="noopener" title="Telegram">
+        <span class="icon"><img src="https://cdn.simpleicons.org/telegram/26A5E4" alt="Telegram" /></span>
+        <span class="label">Telegram</span>
+      </a>
+    </div>
+    <p class="muted" style="margin:8px 0 0">Choose your preferred payment method.</p>
+  </div>
+</div>
+{% else %}
+  <div class="card glass" style="padding:16px">
+    <p>Your cart is empty.</p>
+    <a class="btn" href="/shop">Back to Shop</a>
+  </div>
+{% endif %}
+{% endblock %}

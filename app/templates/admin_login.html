@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card glass" style="max-width:520px;margin:20px auto;padding:20px">
+  <h2 class="title">Admin Login</h2>
+  <p>This page is for admins only. Enter your username and password to continue.</p>
+  <form method="post" action="" class="form">
+    <label>Username</label>
+    <input name="username" placeholder="Username" required />
+    <label>Password</label>
+    <input name="password" type="password" placeholder="Password" required />
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn gold" type="submit">Login</button>
+      <a class="btn" href="/">Back to Site</a>
+    </div>
+  </form>
+
+</div>
+{% endblock %}

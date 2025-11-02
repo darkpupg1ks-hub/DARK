@@ -1,0 +1,55 @@
+﻿{% extends "admin_layout.html" %}
+{% block content %}
+<div style="max-width:1200px;margin:24px auto;padding:24px">
+  <style>
+    .admin-sidebar { display:none !important }
+    .admin-main, .admin-card, .content { margin-right:0 !important }
+    .tools-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+    .tool-card{position:relative;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px 14px;box-shadow:0 8px 22px rgba(2,3,6,0.45)}
+    .tool-title{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+    .avatar{width:36px;height:36px;border-radius:10px;background:#1e2230;display:flex;align-items:center;justify-content:center;font-weight:800}
+    .tool-notes{opacity:.85;margin:8px 0 12px;height:40px;overflow:hidden}
+    .tool-meta{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .version{background:#2a2f3f;border-radius:8px;padding:6px 10px;font-size:12px}
+    .btn{background:#f6c02a;color:#111;padding:6px 10px;border-radius:8px;text-decoration:none;font-weight:700}
+    .corner-actions{position:absolute;top:10px;inset-inline-end:10px;display:flex;gap:8px}
+    .icon-btn{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#2a2f3f;border:1px solid rgba(255,255,255,.06);cursor:pointer;color:#fff;text-decoration:none}
+    .icon-btn.delete{background:#3a2430}
+    .no-tools{opacity:.8;margin-top:12px}
+  </style>
+
+  <div class="tools-header">
+    <h2>🧰 أدوات الموقع</h2>
+    <a class="btn" href="{{ url_for('dashboard.add_tool') }}">+ إضافة أداة جديدة</a>
+  </div>
+  <p>شبكة بطاقات بحد أقصى 3-4 في الصف مع أزرار تعديل وحذف لكل بطاقة.</p>
+
+  <div class="tools-grid">
+    {% for t in tools %}
+      <div class="tool-card">
+        <div class="corner-actions">
+          <a class="icon-btn" title="تعديل" href="{{ url_for('dashboard.edit_tool', tool_id=t.get('id')) }}">✎</a>
+          <form method="post" action="{{ url_for('dashboard.delete_tool', tool_id=t.get('id')) }}" onsubmit="return confirm('حذف هذه الأداة؟');">
+            <button class="icon-btn delete" type="submit" title="حذف">🗑</button>
+          </form>
+        </div>
+        <div class="tool-title">
+          <div class="avatar">{{ (t.get('title') or ' ')[0]|upper }}</div>
+          <div>
+            <div style="font-weight:800;font-size:16px">{{ t.get('title') or '' }}</div>
+            <div style="opacity:.7;font-size:12px">{{ t.get('visible') and 'مرئي' or 'مخفي' }}</div>
+          </div>
+        </div>
+        <div class="tool-notes">{{ t.get('notes','') }}</div>
+        <div class="tool-meta">
+          <span class="version">{{ t.get('version','') or 'latest' }}</span>
+          <a class="btn" href="{{ t.get('link','') }}" target="_blank">Download</a>
+        </div>
+      </div>
+    {% else %}
+      <div class="no-tools">لا توجد أدوات بعد — أضف أداة جديدة.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

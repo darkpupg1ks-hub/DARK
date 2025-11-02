@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DARK Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      --neon-gold: #f6c02a;
+      --neon-blue: #00eaff;
+      --neon-purple: #b400ff;
+      --sidebar-bg: rgba(10, 12, 18, 0.85);
+      --text-light: #f5f5f5;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top left, #0d1016, #05070a);
+      color: var(--text-light);
+      font-family: "Segoe UI", sans-serif;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar Container */
+    .sidebar {
+      width: 240px;
+      background: var(--sidebar-bg);
+      backdrop-filter: blur(12px) saturate(150%);
+      border-right: 1px solid rgba(255,255,255,0.05);
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .sidebar h3 {
+      color: var(--neon-gold);
+      font-size: 20px;
+      font-weight: 800;
+      margin: 0 0 24px;
+      text-shadow: 0 0 10px var(--neon-gold);
+      text-align: center;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Sidebar Buttons */
+    .sidebar ul li a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      color: #eaeaea;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 12px 14px;
+      transition: 0.25s ease;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3) inset;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sidebar ul li a::before {
+      content: "";
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      transition: .4s;
+    }
+
+    .sidebar ul li a:hover::before {
+      left: 100%;
+    }
+
+    .sidebar ul li a:hover {
+      color: #111;
+      background: linear-gradient(90deg, var(--neon-gold), var(--neon-purple));
+      box-shadow: 0 0 20px var(--neon-gold);
+      transform: translateX(4px);
+    }
+
+    .sidebar ul li a:active {
+      transform: scale(0.97);
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 30px;
+      width: calc(100% - 260px);
+      animation: fadeInUp 0.6s ease;
+    }
+
+    /* Alerts */
+    .alert {
+      margin: 10px 0;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(8px);
+    }
+
+    .alert-success { border-color: #2ecc71; color: #2ecc71; }
+    .alert-error { border-color: #e74c3c; color: #e74c3c; }
+    .alert-warning { border-color: #f1c40f; color: #f1c40f; }
+    .alert-info { border-color: #3498db; color: #3498db; }
+
+    /* Scrollbar custom */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--neon-blue); }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sidebar">
+    <h3>Welcome, Admin</h3>
+    <ul>
+      <li><a href="{{ url_for('dashboard.welcome') }}">🏠 Welcome</a></li>
+      <li><a href="{{ url_for('dashboard.keys') }}">🔑 Keys</a></li>
+      <li><a href="{{ url_for('dashboard.tools') }}">🧰 Tools</a></li>
+      <li><a href="{{ url_for('dashboard.shop') }}">🛒 Shop</a></li>
+      <li><a href="{{ url_for('dashboard.logout') }}">🚪 Logout</a></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

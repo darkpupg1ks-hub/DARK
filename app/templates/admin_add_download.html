@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card glass" style="max-width:700px;margin:20px auto;padding:20px">
+  <h2 class="title">Add Download</h2>
+  <form method="post" class="form">
+    <input name="title" placeholder="Title" required />
+    <input name="link" placeholder="Link" required />
+    <input name="version" placeholder="Version" />
+    <textarea name="notes" placeholder="Notes"></textarea>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn gold" type="submit">Create</button>
+      <a class="btn" href="{{ url_for('dashboard.downloads') }}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

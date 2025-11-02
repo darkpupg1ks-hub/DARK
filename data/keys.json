@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "key": "830D4CDB91A74EA7A9480B43",
+    "key_value": "830D4CDB91A74EA7A9480B43",
+    "username": null,
+    "product": null,
+    "expires_at": null,
+    "is_used": false,
+    "used": false,
+    "created_at": 1761825830.2966185
+  },
+  {
+    "id": 2,
+    "key": "FDB19618E17C4374A549365A",
+    "key_value": "FDB19618E17C4374A549365A",
+    "username": null,
+    "product": null,
+    "expires_at": null,
+    "is_used": false,
+    "used": false,
+    "created_at": 1761826103.6226275
+  }
+]

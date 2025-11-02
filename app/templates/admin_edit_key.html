@@ -1,0 +1,18 @@
+{% extends "admin_layout.html" %}
+{% block content %}
+<div style="max-width:700px;margin:20px auto;padding:20px">
+  <h2 class="title">Edit License Key</h2>
+  <form method="post" class="form">
+    <label>Key</label>
+    <input name="key" value="{{ key.key if key and key.key is defined else '' }}" required />
+    <label>Product ID (optional)</label>
+    <input name="product_id" value="{{ key.product or key.product_id if key else '' }}" />
+    <label>Used</label>
+    <input type="checkbox" name="is_used" {% if key and (key.is_used == True or key.is_used == 'True' or key.is_used == 'true') %}checked{% endif %} />
+    <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
+      <button class="btn gold" type="submit">Save</button>
+      <a class="btn" href="{{ url_for('dashboard.keys') }}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

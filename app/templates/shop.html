@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{# Admin manage bar removed from public shop per request #}
+
+<h2 class="title">Shop</h2>
+<div class="grid products-grid">
+  {% for p in products %}
+  <div class="card glass product-card">
+    <a class="media" href="/shop/{{ p.id }}" title="View product">
+      <div class="bg" style="background-image:url('{{ p.thumb }}')"></div>
+      <div class="overlay">
+        <div class="name">{{ p.name }}</div>
+        <div class="price">${{ '%.2f'|format(p.price or 0) }}</div>
+      </div>
+    </a>
+    <div class="details">
+      <div class="desc">{{ p.short_desc }}</div>
+      <div class="actions">
+        <a class="btn" href="/shop/{{ p.id }}">Details</a>
+        
+        <a class="btn gold" href="{{ url_for('shop.add_to_cart', pid=p.id, next='/shop') }}">Add to Cart</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  
+</div>
+{% endblock %}

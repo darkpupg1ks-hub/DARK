@@ -1,0 +1,49 @@
+{% extends "admin_layout.html" %}
+{% block content %}
+<div style="max-width:820px;margin:24px auto;padding:10px">
+  <style>
+    .page-title{display:flex;align-items:center;gap:10px;color:#f6c02a;margin:0 0 12px}
+    .form-card{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;box-shadow:0 10px 26px rgba(0,0,0,.45)}
+    .form-label{display:block;margin:12px 0 6px;opacity:.9}
+    .input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.15);color:inherit}
+    textarea.input{min-height:84px}
+    .hint{opacity:.7;font-size:12px;margin-top:4px}
+    .form-actions{display:flex;gap:10px;margin-top:14px}
+    .btn{padding:8px 14px;border-radius:10px;text-decoration:none;border:0;cursor:pointer}
+    .btn.primary{background:#f6c02a;color:#111;font-weight:800}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.15);color:inherit}
+  </style>
+  <h2 class="page-title">Edit Tool</h2>
+  <form method="post" action="{{ url_for('dashboard.edit_tool', tool_id=tool.get('id')) }}">
+    <div class="form-card">
+      <label class="form-label">Title</label>
+      <input class="input" name="title" value="{{ tool.get('title','') or tool.get('name','') }}" placeholder="Tool title" required />
+
+      <label class="form-label">Version</label>
+      <input class="input" name="version" value="{{ tool.get('version','') }}" placeholder="v1.2.3" />
+
+      <label class="form-label">Notes</label>
+      <textarea class="input" name="notes" placeholder="Short description or notes">{{ tool.get('notes','') or tool.get('description','') }}</textarea>
+
+      <label class="form-label">Download Link</label>
+      <input class="input" name="link" value="{{ tool.get('link','') or tool.get('download_url','') }}" placeholder="https://..." />
+
+      <label class="form-label">Full Background Image (optional)</label>
+      <input class="input" name="bg_image" value="{{ tool.get('bg_image','') }}" placeholder="https://.../bg.jpg" />
+      <div class="hint">Shown as a soft background for the card.</div>
+
+      <label class="form-label">Thumbnail (optional)</label>
+      <input class="input" name="thumb_image" value="{{ tool.get('thumb_image','') }}" placeholder="https://.../thumb.png" />
+      <div class="hint">Shown instead of the first letter. If empty, the letter will be used.</div>
+
+      <label class="form-label"><input type="checkbox" name="visible" value="1" {% if tool.get('visible') %}checked{% endif %}/> Visible</label>
+
+      <div class="form-actions">
+        <button class="btn primary" type="submit">Save Changes</button>
+        <a class="btn ghost" href="{{ url_for('dashboard.tools') }}">Cancel</a>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
+

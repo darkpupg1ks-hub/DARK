@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card glass" style="max-width:1180px;margin:20px auto;padding:16px">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <h2 class="title" style="margin:0">Manage Products</h2>
+    <a class="btn gold" href="{{ url_for('dashboard.add_product') }}">Add Product</a>
+  </div>
+  <div class="admin-products-grid" style="margin-top:14px">
+    {% for p in products %}
+      <div class="product-admin-card">
+        <div class="cover" style="background-image:url('{{ p.thumb }}')"></div>
+        <div class="product-body">
+          <div class="meta">
+            <div class="title-price">
+              <div class="name">{{ p.name }}</div>
+              <div class="price">${{ '%.2f'|format(p.price or 0) }}</div>
+            </div>
+            <div class="actions">
+              <a class="btn ghost" href="{{ url_for('dashboard.edit_product', pid=p.id) }}">Edit</a>
+              <form method="post" action="{{ url_for('dashboard.delete_product', pid=p.id) }}" onsubmit="return confirm('Delete product?')">
+                <button class="btn ghost danger" type="submit">Delete</button>
+              </form>
+            </div>
+          </div>
+          <div class="desc">{{ p.short_desc }}</div>
+        </div>
+      </div>
+    {% else %}
+      <p>No products yet.</p>
+    {% endfor %}
+  </div>
+  <div style="margin-top:10px;display:flex;gap:8px">
+    <a class="btn" href="{{ url_for('dashboard.shop') }}">Back</a>
+    <a class="btn" href="/shop" target="_blank">Open Public Shop</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card glass" style="max-width:700px;margin:20px auto;padding:20px">
+  <h2 class="title">Edit Product</h2>
+  <form method="post" class="form">
+    <input name="name" placeholder="Name" value="{{ product.name }}" required />
+    <input name="price" placeholder="Price" value="{{ product.price }}" required />
+    <input name="thumb" placeholder="Thumb URL" value="{{ product.thumb }}" />
+    <input name="short_desc" placeholder="Short description" value="{{ product.short_desc }}" />
+    <textarea name="long_desc" placeholder="Long description">{{ product.long_desc }}</textarea>
+    <textarea name="images" placeholder="Images (one per line)">{{ images_text }}</textarea>
+    <textarea name="videos" placeholder="Videos (one per line)">{{ videos_text }}</textarea>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn gold" type="submit">Save</button>
+      <a class="btn" href="{{ url_for('dashboard.products') }}">Cancel</a>
+    </div>
+  </form>
+  {% if product.thumb %}
+  <div style="margin-top:10px">
+    <small>Preview:</small>
+    <div style="height:120px;background-image:url('{{ product.thumb }}');background-size:cover;background-position:center;border-radius:12px"></div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

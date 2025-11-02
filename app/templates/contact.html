@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="title">AI Chat</h2>
+<p style="opacity:.8;margin-top:-6px;margin-bottom:10px">Experimental assistant. Answers in English.</p>
+
+<div class="ai-shell">
+  <div id="ai-box" class="ai-card glass">
+    <div class="ai-head">
+      <div class="ai-status"><span class="dot"></span>Ready to help</div>
+      <div class="ai-actions"><button class="btn" id="ai-clear" type="button">Clear</button></div>
+    </div>
+
+    <div id="ai-log" class="ai-log" aria-live="polite"></div>
+    <div id="ai-typing" class="ai-typing" hidden><span class="b1"></span><span class="b2"></span><span class="b3"></span></div>
+
+    <div class="ai-input">
+      <textarea id="ai-input" rows="2" placeholder="Type your question here... (Shift+Enter for newline)"></textarea>
+      <button id="ai-send" class="btn gold" type="button">Send</button>
+    </div>
+
+    <div class="chips">
+      <button class="chip" type="button" data-prompt="What payment methods are available?">Payments</button>
+      <button class="chip" type="button" data-prompt="Guide me through how to buy a product from the shop">How to buy</button>
+      <button class="chip" type="button" data-prompt="Show me the available products">Products</button>
+    </div>
+  </div>
+  <script>
+  (() => {
+    const log = document.getElementById('ai-log');
+    const input = document.getElementById('ai-input');
+    const sendBtn = document.getElementById('ai-send');
+    const typing = document.getElementById('ai-typing');
+    const quicks = document.querySelectorAll('#ai-box [data-prompt]');
+    const clearBtn = document.getElementById('ai-clear');
+
+    const messages = [
+      { role: 'system', content: 'You are the DARK website assistant. Answer briefly and clearly in English.' }
+    ];
+
+    function bubble(cls, html){
+      const wrap = document.createElement('div');
+      wrap.className = 'bubble ' + cls;
+      wrap.innerHTML = html;
+      log.appendChild(wrap);
+      log.scrollTop = log.scrollHeight;
+      return wrap;
+    }
+
+    function setTyping(v){ typing.hidden = !v; if(v) log.scrollTop = log.scrollHeight; }
+
+    async function send(){
+      const content = (input.value || '').trim();
+      if(!content) return;
+      input.value = '';
+      bubble('you', content.replace(/</g,'&lt;'));
+      messages.push({ role: 'user', content });
+      sendBtn.disabled = true; setTyping(true);
+      try {
+        const r = await fetch('/api/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ messages }) });
+        const j = await r.json();
+        const reply = j.reply || j.error || 'Could not get a reply.';
+        messages.push({ role: 'assistant', content: reply });
+        bubble('ai', reply.replace(/\n/g,'<br>'));
+      } catch (e){
+        bubble('ai', 'An error occurred while contacting the server.');
+      } finally {
+        sendBtn.disabled = false; setTyping(false); input.focus();
+      }
+    }
+
+    sendBtn.addEventListener('click', send);
+    input.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(); }});
+    quicks.forEach(b => b.addEventListener('click', ()=>{ input.value = b.dataset.prompt; input.focus(); }));
+    clearBtn.addEventListener('click', ()=>{ log.innerHTML=''; messages.splice(1); });
+
+    bubble('ai', "Hello! I'm the DARK assistant. How can I help you today?");
+  })();
+  </script>
+</div>
+{% endblock %}
+

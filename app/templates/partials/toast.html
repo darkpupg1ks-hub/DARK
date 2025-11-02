@@ -1,0 +1,5 @@
+<div class="toasts">
+  {% for cat, msg in messages %}
+    <div class="toast {{ cat }} glass">{{ msg }}</div>
+  {% endfor %}
+</div>

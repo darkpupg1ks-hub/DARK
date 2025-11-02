@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="title">سلة المشتريات</h2>
+{% if cart and cart|length > 0 %}
+<div class="cart-wrap">
+  <form method="post" action="{{ url_for('shop.update_cart') }}" class="card glass" style="padding:12px">
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>المنتج</th>
+          <th>السعر</th>
+          <th>الكمية</th>
+          <th>المجموع</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in cart %}
+        <tr>
+          <td class="prod">
+            {% if i.thumb %}<img src="{{ i.thumb }}" alt="" />{% endif %}
+            <span>{{ i.name }}</span>
+          </td>
+          <td>${{ '%.2f'|format(i.price or 0) }}</td>
+          <td>
+            <div class="qty-box">
+              <button type="button" class="qty-dec" data-id="{{ i.id }}">-</button>
+              <input type="number" min="1" name="qty_{{ i.id }}" value="{{ i.qty }}" />
+              <button type="button" class="qty-inc" data-id="{{ i.id }}">+</button>
+            </div>
+          </td>
+          <td>
+            {% set line = (i.price or 0) * (i.qty or 1) %}
+            ${{ '%.2f'|format(line) }}
+          </td>
+          <td>
+            <form method="post" action="{{ url_for('shop.remove_from_cart', pid=i.id) }}">
+              <button class="btn" type="submit">إزالة</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div style="display:flex;gap:8px">
+      <button class="btn gold" type="submit">تحديث السلة</button>
+      <a class="btn" href="/shop">متابعة التسوق</a>
+    </div>
+  </form>
+
+  <div class="cart-summary card glass">
+    <div class="cart-total">الإجمالي: <strong>${{ '%.2f'|format(total or 0) }}</strong></div>
+    <button class="btn gold" style="width:100%">متابعة الدفع</button>
+    <p class="muted" style="margin-top:8px">الدفع تجريبي. يمكنك استكماله لاحقًا ببوابة دفع.</p>
+  </div>
+
+  <!-- Payment methods (Arabic) -->
+  <div class="card glass" style="padding:14px">
+    <h3 style="margin:0 0 8px;color:var(--gold)">طرق الدفع المتاحة</h3>
+    <ul style="margin:6px 0 0 18px;line-height:1.7">
+      <li>عبر ديسكورد: <a href="https://discord.gg/FtprtXweuZ" target="_blank" rel="noopener">discord.gg/FtprtXweuZ</a></li>
+      <li>واتساب/اتصال: <a href="https://wa.me/971566252595" target="_blank" rel="noopener">+971 56 625 2595</a></li>
+      <li>إرسال الأموال عبر بوتم الإمارات: <strong>+971 56 625 2595</strong></li>
+      <li>تليجرام: <a href="https://t.me/DARK_PB" target="_blank" rel="noopener">@DARK_PB</a></li>
+    </ul>
+  </div>
+</div>
+{% else %}
+  <div class="card glass" style="padding:16px">
+    <p>السلة فارغة.</p>
+    <a class="btn" href="/shop">اذهب للمتجر</a>
+  </div>
+{% endif %}
+{% endblock %}
